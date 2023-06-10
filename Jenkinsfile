@@ -11,10 +11,9 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'npm install'
+                cache(config: 'cypress-cache', key: 'cypress-cache', paths: ['tmp/Cypress'])
+                sh 'CYPRESS_CACHE_FOLDER=./tmp/Cypress npm install'
                 sh 'npm run build'
-                // Stash the installed Cypress binary
-                stash includes: 'node_modules/**', name: 'cypress'
             }
         }
         stage('Story') {
@@ -24,10 +23,18 @@ pipeline {
         }
         stage('e2e') {
             steps {
-                // Unstash the Cypress binary
-                unstash 'cypress'
-                sh 'npm run cypress:headless'
+                cache(config: 'cypress-cache', key: 'cypress-cache', paths: ['tmp/Cypress'])
+
+                // Run Cypress tests with cache folder
+                sh 'CYPRESS_CACHE_FOLDER=./tmp/Cypress npm run cypress:headless'
             }
+        }
+    }
+    
+    post {
+        always {
+        // Save the cache for reuse
+        cache(config: 'cypress-cache', key: 'cypress-cache', paths: ['tmp/Cypress'])
         }
     }
 }
