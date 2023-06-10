@@ -13,6 +13,8 @@ pipeline {
             steps {
                 sh 'npm install'
                 sh 'npm run build'
+                // Stash the installed Cypress binary
+                stash includes: 'node_modules/**', name: 'cypress'
             }
         }
         stage('Story') {
@@ -22,6 +24,8 @@ pipeline {
         }
         stage('e2e') {
             steps {
+                // Unstash the Cypress binary
+                unstash 'cypress'
                 sh 'npm run cypress:headless'
             }
         }
