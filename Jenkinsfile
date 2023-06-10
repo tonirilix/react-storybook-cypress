@@ -15,9 +15,9 @@ pipeline {
                 sh 'npm run build'
             }
         }
-        stage('Test') {
+        stage('Story') {
             steps {
-                sh 'npm run lint'
+                sh 'npm run build-storybook'
             }
         }
         stage('e2e') {
