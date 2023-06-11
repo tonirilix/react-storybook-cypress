@@ -9,9 +9,23 @@ pipeline {
         CI = 'true'
     }
     stages {
+        stage('Init') {
+             // Check if Cypress cache exists
+            script {
+            if (!fileExists('/home/node/.cache/Cypress')) {
+                // Install Cypress dependencies
+                sh 'npm ci'
+
+                // Cache the Cypress binary
+                stash includes: ['node_modules/**', '.cache/Cypress/**'], name: 'cypress-cache'
+            }
+            }
+
+            // Unstash the Cypress cache
+            unstash 'cypress-cache'
+        }
         stage('Build') {
             steps {
-                sh 'npm install'
                 sh 'npm run build'
             }
         }
@@ -24,7 +38,6 @@ pipeline {
                 }        
                 stage('e2e') {
                     steps {
-                        sh 'npm install'
                         sh 'npm run cypress:headless'
                     }
                 }
@@ -32,10 +45,10 @@ pipeline {
         }        
     }
 
-    // post {
-    //     always {
-    //         // Stash Cypress cache for future runs
-    //         stash includes: 'tmp/Cypress/**', name: 'cypress-cache'
-    //     }
-    // }
+    post {
+        always {
+            // Stash the Cypress cache for future runs
+            stash includes: ['node_modules/**', '.cache/Cypress/**'], name: 'cypress-cache'
+        }
+    }
 }
