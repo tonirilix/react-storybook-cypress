@@ -24,7 +24,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "init-msw": "msw init public/",
-    "cypress:headless": "cypress run --headless --browser chrome"
+    "cypress:headless": "cypress run --headless --browser chrome",
+    "cy:verify": "cypress verify"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^7.0.6",

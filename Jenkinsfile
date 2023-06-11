@@ -1,8 +1,9 @@
 pipeline {
     agent {
         docker {
-            image 'node:lts-buster-slim'
-            args '-p 3000:3000'
+            // image 'node:lts-buster-slim'
+            // args '-p 3000:3000'
+            image 'cypress/base:18.14.1'
         }
     }
     environment {
@@ -16,10 +17,9 @@ pipeline {
                     if (!fileExists('/home/node/.cache/Cypress')) {
                         // Install Cypress dependencies
                         sh 'npm ci'
-
                         // Cache the Cypress binary
                         stash includes: 'node_modules/**, .cache/Cypress/**', name: 'cypress-cache'
-
+                        sh 'npm run cy:verify'
                     }
                 }
 
