@@ -18,7 +18,8 @@ pipeline {
                         sh 'npm ci'
 
                         // Cache the Cypress binary
-                        stash includes: ['node_modules/**', '.cache/Cypress/**'], name: 'cypress-cache'
+                        stash includes: 'node_modules/**, .cache/Cypress/**', name: 'cypress-cache'
+
                     }
                 }
 
@@ -50,7 +51,8 @@ pipeline {
     post {
         always {
             // Stash the Cypress cache for future runs
-            stash includes: ['node_modules/**', '.cache/Cypress/**'], name: 'cypress-cache'
+            stash includes: 'node_modules/**, .cache/Cypress/**', name: 'cypress-cache'
+
         }
     }
 }
