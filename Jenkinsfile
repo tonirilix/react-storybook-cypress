@@ -3,7 +3,6 @@ pipeline {
         docker {
             image 'node:lts-buster-slim'
             args '-p 3000:3000'
-            // image 'cypress/base:18.14.1'
         }
     }
     environment {
@@ -32,18 +31,27 @@ pipeline {
                 sh 'npm run build'
             }
         }
-        stage('e2e') {
+        stage('Parallel') {
             parallel {
-                stage('Story') {
+                stage('story') {
                     steps {
                         sh 'npm run build-storybook'
                     }
                 }        
-                stage('e2e') {
+                stage('msw') {
                     steps {
-                        sh 'npm run cypress:headless'
+                        // This is just a test
+                        sh 'npm run init-msw'
                     }
                 }
+            }
+        }        
+        stage('Front-end') {
+            agent {
+                docker { image 'cypress/base:18.14.1' }
+            }
+            steps {
+                sh 'npm run cypress:headless'
             }
         }        
     }
