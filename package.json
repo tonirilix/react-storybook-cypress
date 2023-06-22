@@ -22,9 +22,10 @@
     "build": "vite build",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
+    "storybook:ci": "storybook dev -p 6006 --ci",
     "build-storybook": "storybook build",
     "init-msw": "msw init public/",
-    "cypress:headless": "cypress run --headless --browser electron",
+    "cy:headless": "cypress run --headless --browser electron",
     "cy:verify": "cypress verify"
   },
   "devDependencies": {
